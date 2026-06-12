@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Founder's Office Greenery Dashboard</title>
+    <!-- Tailwind CSS for modern responsive styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome for polished icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        /* Custom scrollbar styling for a premium feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        /* Pulse animations for hotspots */
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.5; }
+            50% { transform: scale(1.15); opacity: 0.8; }
+            100% { transform: scale(0.95); opacity: 0.5; }
+        }
+        .hotspot-pulse {
+            animation: pulse-ring 2s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Brand Header -->
+    <header class="bg-gradient-to-r from-emerald-950 via-teal-900 to-slate-900 text-white shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 mb-2">
+                        <i class="fa-solid fa-briefcase mr-1.5"></i> Spatial Optimization Tool
+                    </span>
+                    <h1 class="text-3xl font-extrabold tracking-tight">Founder's Office Greenery Planner</h1>
+                    <p class="text-emerald-200/80 mt-1 text-sm max-w-2xl">
+                        A data-driven decision matrix analyzing the aesthetic, operational, spatial, and financial trade-offs of Live, Preserved, and Artificial plants for low-space executive offices.
+                    </p>
+                </div>
+                <!-- Mini Office Info Card -->
+                <div class="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/10 text-xs flex flex-col gap-1.5 self-start md:self-auto min-w-[220px]">
+                    <div class="flex justify-between text-emerald-200"><span class="font-semibold">Target Room:</span> <span>Founder's Executive Suite</span></div>
+                    <div class="flex justify-between text-emerald-200"><span class="font-semibold">Available Space:</span> <span>Compact Credenza Top</span></div>
+                    <div class="flex justify-between text-emerald-200"><span class="font-semibold">Microclimates:</span> <span>Low Light / AC Draft Risk</span></div>
+                    <div class="flex justify-between text-emerald-200"><span class="font-semibold">Operational Team:</span> <span>Self / Minimal Care Crew</span></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-8 sm:px-6 lg:px-8 flex flex-col gap-8">
+
+        <!-- Interactive Suitability Calculator & Quick Configurator -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            <div class="border-b border-slate-100 pb-4 mb-6">
+                <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-emerald-600"></i> Smart Suitability Calculator
+                </h2>
+                <p class="text-sm text-slate-500 mt-1">
+                    Fine-tune your constraints based on daily office realities to dynamically determine the mathematically ideal foliage category.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left & Middle: Slider Controls -->
+                <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Light Level Slider -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <label class="block text-sm font-semibold text-slate-700 flex justify-between">
+                            <span>Available Natural Light</span>
+                            <span id="lightValText" class="text-emerald-600 font-bold">Low Ambient</span>
+                        </label>
+                        <input id="lightSlider" type="range" min="1" max="3" value="1" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer mt-4 accent-emerald-600">
+                        <div class="flex justify-between text-[10px] text-slate-400 mt-2">
+                            <span>Windowless / Dark</span>
+                            <span>Partial Shade</span>
+                            <span>Bright Windows</span>
+                        </div>
+                    </div>
+
+                    <!-- Maintenance Time Slider -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <label class="block text-sm font-semibold text-slate-700 flex justify-between">
+                            <span>Max Effort / Care Budget</span>
+                            <span id="careValText" class="text-emerald-600 font-bold">0 mins/week (Zero Care)</span>
+                        </label>
+                        <input id="careSlider" type="range" min="1" max="3" value="1" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer mt-4 accent-emerald-600">
+                        <div class="flex justify-between text-[10px] text-slate-400 mt-2">
+                            <span>Zero Effort</span>
+                            <span>5-10 mins / Month</span>
+                            <span>15+ mins / Week</span>
+                        </div>
+                    </div>
+
+                    <!-- Budget Limit Slider -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <label class="block text-sm font-semibold text-slate-700 flex justify-between">
+                            <span>Upfront Budget (Per 30-40cm Plant)</span>
+                            <span id="budgetValText" class="text-emerald-600 font-bold">Economy (Under ₹800)</span>
+                        </label>
+                        <input id="budgetSlider" type="range" min="1" max="3" value="1" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer mt-4 accent-emerald-600">
+                        <div class="flex justify-between text-[10px] text-slate-400 mt-2">
+                            <span>Low (Faux/Basic)</span>
+                            <span>Mid (Imported Faux)</span>
+                            <span>Premium (Preserved)</span>
+                        </div>
+                    </div>
+
+                    <!-- Air Quality Importance -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <label class="block text-sm font-semibold text-slate-700 flex justify-between">
+                            <span>Priority: Biophilia & Air Benefits</span>
+                            <span id="biophiliaValText" class="text-emerald-600 font-bold">Nice-to-have</span>
+                        </label>
+                        <input id="biophiliaSlider" type="range" min="1" max="3" value="2" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer mt-4 accent-emerald-600">
+                        <div class="flex justify-between text-[10px] text-slate-400 mt-2">
+                            <span>No Preference</span>
+                            <span>Moderate Preference</span>
+                            <span>Highest Priority</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Recommendation Output Card -->
+                <div class="bg-emerald-950 text-white p-6 rounded-2xl flex flex-col justify-between shadow-md relative overflow-hidden">
+                    <div class="absolute -right-16 -bottom-16 w-48 h-48 bg-emerald-800/20 rounded-full blur-2xl"></div>
+                    <div>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-emerald-300">Your Recommended Solution</span>
+                        <h3 id="bestMatchTitle" class="text-2xl font-bold mt-1 text-white">Preserved Plants</h3>
+                        <p id="bestMatchDesc" class="text-xs text-emerald-200/90 mt-2 leading-relaxed">
+                            Since your office space has low light but high aesthetic priority for clients, chemically preserved plants offer a real-feel premium environment with zero watering chores.
+                        </p>
+                    </div>
+
+                    <!-- Score Progress bars -->
+                    <div class="space-y-3 mt-6 z-10">
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span>Preserved (Non-Dying)</span>
+                                <span id="scorePreservedText">85%</span>
+                            </div>
+                            <div class="w-full bg-emerald-900/50 rounded-full h-2">
+                                <div id="scorePreservedBar" class="bg-amber-400 h-2 rounded-full transition-all duration-500" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span>Live Plants (e.g. Snake/ZZ)</span>
+                                <span id="scoreLiveText">60%</span>
+                            </div>
+                            <div class="w-full bg-emerald-900/50 rounded-full h-2">
+                                <div id="scoreLiveBar" class="bg-emerald-400 h-2 rounded-full transition-all duration-500" style="width: 60%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span>Artificial / Synthetics</span>
+                                <span id="scoreArtificialText">45%</span>
+                            </div>
+                            <div class="w-full bg-emerald-900/50 rounded-full h-2">
+                                <div id="scoreArtificialBar" class="bg-slate-400 h-2 rounded-full transition-all duration-500" style="width: 45%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Founder's Office Spatial Interactive Micro-Climate Guide -->
+        <section class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+            <div class="border-b border-slate-100 pb-4 mb-6">
+                <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-couch text-emerald-600"></i> Credenza Arrangement & Hotspot Inspector
+                </h2>
+                <p class="text-sm text-slate-500 mt-1">
+                    Toggle between the arrangements to compare the existing Monstera/Faux design and the proposed resilient Live Snake/ZZ plant design. Click hotspots to analyze localized suitability.
+                </p>
+            </div>
+
+            <!-- Split View: Visualizer with overlay hot spots on Left, Info Cards on Right -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <!-- Left: Arrangement Container + Real Image Views (7 Columns) -->
+                <div class="lg:col-span-7 flex flex-col justify-start">
+                    
+                    <!-- Tab Selector for Arrangements -->
+                    <div class="flex items-center space-x-1 bg-slate-100 p-1 rounded-xl mb-4 self-start">
+                        <button onclick="toggleArrangement('current')" id="btnArrangementCurrent" class="px-4 py-2 text-xs font-bold rounded-lg transition-all shadow-sm bg-white text-slate-800 border border-slate-200">
+                            Current Arrangement (image_a11343.jpg)
+                        </button>
+                        <button onclick="toggleArrangement('proposed')" id="btnArrangementProposed" class="px-4 py-2 text-xs font-medium rounded-lg transition-all text-slate-500 hover:text-slate-800">
+                            Proposed Live Arrangement (watermarked_img_10882990160863026334.png)
+                        </button>
+                    </div>
+
+                    <!-- Image Display Wrapper with Interactive Overlay Nodes -->
+                    <div class="relative w-full aspect-[4/5] bg-slate-900 rounded-2xl overflow-hidden shadow-lg border border-slate-300">
+                        
+                        <!-- Image 1: Current Arrangement -->
+                        <img id="imgCurrent" class="w-full h-full object-cover select-none transition-opacity duration-300 opacity-100" 
+                             src="image_a11343.jpg" 
+                             alt="Current Office Greenery Layout"
+                             onerror="this.src='https://placehold.co/560x700/f1f5f9/475569?text=Current+Arrangement+Image';">
+                        
+                        <!-- Image 2: Proposed Arrangement -->
+                        <img id="imgProposed" class="absolute inset-0 w-full h-full object-cover select-none transition-opacity duration-300 opacity-0 pointer-events-none" 
+                             src="watermarked_img_10882990160863026334.png" 
+                             alt="Proposed Live Office Greenery Layout"
+                             onerror="this.src='https://placehold.co/560x700/f1f5f9/475569?text=Proposed+Arrangement+Image';">
+
+                        <!-- OVERLAY HOTSPOTS -->
+                        
+                        <!-- Hotspot: Left Side Plant (Monstera / Snake Plant) -->
+                        <button onclick="selectHotspot('leftPlant')" class="absolute left-[26%] bottom-[42%] -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-emerald-500/90 text-white flex items-center justify-center font-bold shadow-lg transition-transform hover:scale-115 focus:outline-none z-10">
+                            <span class="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 animate-ping hotspot-pulse"></span>
+                            <i class="fa-solid fa-leaf text-xs"></i>
+                        </button>
+
+                        <!-- Hotspot: Center Tray Plant on Books -->
+                        <button onclick="selectHotspot('centerDesk')" class="absolute left-[54%] bottom-[46%] -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-amber-500/90 text-white flex items-center justify-center font-bold shadow-lg transition-transform hover:scale-115 focus:outline-none z-10">
+                            <span class="absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75 animate-ping hotspot-pulse"></span>
+                            <i class="fa-solid fa-book text-xs"></i>
+                        </button>
+
+                        <!-- Hotspot: Right Side Plant (Faux leafy plant / ZZ Plant) -->
+                        <button onclick="selectHotspot('rightPlant')" class="absolute left-[81%] bottom-[42%] -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-indigo-500/90 text-white flex items-center justify-center font-bold shadow-lg transition-transform hover:scale-115 focus:outline-none z-10">
+                            <span class="absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75 animate-ping hotspot-pulse"></span>
+                            <i class="fa-solid fa-seedling text-xs"></i>
+                        </button>
+
+                        <!-- Hotspot: AC / Climate Draft Zone (Top Left Ceiling) -->
+                        <button onclick="selectHotspot('ac')" class="absolute left-6 top-6 bg-sky-500/90 text-white py-1.5 px-3 rounded-full text-[10px] font-bold shadow-md flex items-center gap-1.5 hover:bg-sky-600 transition-all z-10">
+                            <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
+                            <i class="fa-solid fa-wind"></i> AC Cold Vent Draft
+                        </button>
+
+                        <!-- Hotspot: Shadow Zone (Top Right Corner) -->
+                        <button onclick="selectHotspot('shadow')" class="absolute right-6 top-6 bg-slate-800/95 text-white py-1.5 px-3 rounded-full text-[10px] font-bold shadow-md flex items-center gap-1.5 hover:bg-slate-950 transition-all z-10">
+                            <span class="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-pulse"></span>
+                            <i class="fa-solid fa-cloud-moon"></i> Low Light shadow
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right: Information Feedback (5 Columns) -->
+                <div class="lg:col-span-5 flex flex-col justify-between">
+                    <div id="hotspotDisplay" class="bg-slate-50 border border-slate-200 rounded-2xl p-6 h-full flex flex-col justify-between transition-all duration-300">
+                        <div>
+                            <div class="flex items-center gap-3">
+                                <span id="hotspotBadge" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+                                    Primary Focal Spot
+                                </span>
+                                <h3 id="hotspotTitle" class="text-xl font-bold text-slate-900">Left Side Credenza Corner</h3>
+                            </div>
+                            
+                            <p id="hotspotSummary" class="text-slate-600 text-xs mt-3 leading-relaxed">
+                                This location hosts the largest foliage footprint in the founder's office. Under the current layout, a large Monstera (Faux/Synthetic) represents a classic bold tropical style, but has an aggressive physical shape which takes up massive spatial depth.
+                            </p>
+
+                            <!-- Plant Categories Performance Breakdown -->
+                            <div class="space-y-3 mt-6">
+                                <div class="flex items-start gap-3 bg-white p-3 rounded-xl border border-slate-200/60 shadow-sm">
+                                    <span class="text-emerald-700 text-xs font-bold bg-emerald-50 rounded px-2.5 py-1 border border-emerald-100 uppercase tracking-wider min-w-[55px] text-center">Live</span>
+                                    <div>
+                                        <h4 class="text-xs font-bold text-slate-800">Snake Plant (Highly Recommended)</h4>
+                                        <p id="hotspotLiveText" class="text-[11px] text-slate-500 mt-0.5">As visualized in <strong class="text-slate-700">watermarked_img_10882990160863026334.png</strong>, replacing the messy sprawling Monstera with a structured, vertical Snake Plant opens visual desk space while cleaning VOCs with minimal watering effort.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3 bg-white p-3 rounded-xl border border-slate-200/60 shadow-sm">
+                                    <span class="text-amber-700 text-xs font-bold bg-amber-50 rounded px-2.5 py-1 border border-amber-100 uppercase tracking-wider min-w-[55px] text-center">Dormant</span>
+                                    <div>
+                                        <h4 class="text-xs font-bold text-slate-800">Preserved Palm / Moss Cluster (Exclusive)</h4>
+                                        <p id="hotspotPreservedText" class="text-[11px] text-slate-500 mt-0.5">Stays perfectly styled at exactly 30-40cm without ever outgrowing the valuable desk area. Highly organic feel, but must be kept clear of dust.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3 bg-white p-3 rounded-xl border border-slate-200/60 shadow-sm">
+                                    <span class="text-slate-700 text-xs font-bold bg-slate-50 rounded px-2.5 py-1 border border-slate-200 uppercase tracking-wider min-w-[55px] text-center">Faux</span>
+                                    <div>
+                                        <h4 class="text-xs font-bold text-slate-800">Faux Monstera Deliciosa (Shown in Current Setup)</h4>
+                                        <p id="hotspotFauxText" class="text-[11px] text-slate-500 mt-0.5">As highlighted in <strong class="text-slate-700">image_a11343.jpg</strong>, this classic look delivers zero-care green vibes but is physically bulky and collects dust quickly under air drafts.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-6 border-t border-slate-200 pt-4 text-[11px] text-slate-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-info text-emerald-600"></i>
+                            <span>Tip: Toggle the arrangement buttons or click other points of interest on the image above.</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Three-Way Head-to-Head Card Comparison -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Live Plants Card -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between group hover:border-emerald-500 transition-all duration-300">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center text-xl font-bold">
+                            <i class="fa-solid fa-seedling"></i>
+                        </div>
+                        <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">Biophilic Active</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900">Live Plants (E.g., Snake/ZZ)</h3>
+                    <p class="text-xs text-slate-500 mt-1">Real biological plants that breathe, grow, and require active watering/soil maintenance.</p>
+                    <ul class="mt-6 space-y-3 text-xs text-slate-600">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-emerald-600 mt-0.5"></i>
+                            <span><strong>Air Purification:</strong> Converts CO2 to oxygen, captures fine dust, removes harmful VOCs inside closed spaces.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-emerald-600 mt-0.5"></i>
+                            <span><strong>Low Upfront Cost:</strong> High quality live plants with premium pots cost ₹300 - ₹600.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-xmark text-rose-500 mt-0.5"></i>
+                            <span><strong>Risk of Decay:</strong> Overwatering, drafts, or complete lack of sunlight can kill them in weeks.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-triangle-exclamation text-amber-500 mt-0.5"></i>
+                            <span><strong>Pest Risk:</strong> Soil moisture can breed minor fungus gnats inside closed executive offices.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-slate-50 p-4 border-t border-slate-100 flex justify-between text-xs font-medium text-slate-600">
+                    <span>Est. Upfront (30-40cm): <strong class="text-emerald-700">₹300 - ₹600</strong></span>
+                    <span>Watering: <strong class="text-slate-800">Once in 2-4 Weeks</strong></span>
+                </div>
+            </div>
+
+            <!-- Non-Dying Preserved Plants Card -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between group hover:border-amber-500 transition-all duration-300">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-amber-100 text-amber-700 rounded-xl flex items-center justify-center text-xl font-bold">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </div>
+                        <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-50 text-amber-700 border border-amber-100">Premium Choice</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900">Preserved (Non-Dying)</h3>
+                    <p class="text-xs text-slate-500 mt-1">Real natural foliage harvested at peak and chemically stabilized with glycerin/dye.</p>
+                    <ul class="mt-6 space-y-3 text-xs text-slate-600">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-emerald-600 mt-0.5"></i>
+                            <span><strong>100% Real Touch:</strong> Soft, organic texture and beautiful biological uniqueness. No plastic shine.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-emerald-600 mt-0.5"></i>
+                            <span><strong>Zero Upkeep:</strong> Never needs water, soil, pruning, or sunlight. Fully dormant forever.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-xmark text-rose-500 mt-0.5"></i>
+                            <span><strong>High Initial Cost:</strong> 30-40cm displays cost anywhere from ₹1,000 to ₹3,500.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-triangle-exclamation text-amber-500 mt-0.5"></i>
+                            <span><strong>Water Sensitivity:</strong> Glycerin-dyed foliage leaks dye if exposed to high humidity/sprinkling.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-slate-50 p-4 border-t border-slate-100 flex justify-between text-xs font-medium text-slate-600">
+                    <span>Est. Upfront (30-40cm): <strong class="text-amber-700">₹1,000 - ₹3,500</strong></span>
+                    <span>Watering: <strong class="text-emerald-700">NEVER</strong></span>
+                </div>
+            </div>
+
+            <!-- Artificial Plants Card -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between group hover:border-slate-400 transition-all duration-300">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-slate-100 text-slate-700 rounded-xl flex items-center justify-center text-xl font-bold">
+                            <i class="fa-solid fa-industry"></i>
+                        </div>
+                        <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-slate-50 text-slate-700 border border-slate-100">Permanently Durable</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900">Artificial / Faux</h3>
+                    <p class="text-xs text-slate-500 mt-1">Industrial creations composed of polyurethane, silk, and supportive metal wire structure.</p>
+                    <ul class="mt-6 space-y-3 text-xs text-slate-600">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-emerald-600 mt-0.5"></i>
+                            <span><strong>Indestructible:</strong> Unbothered by freezing AC draft, intense sun, humidity, or complete darkness.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-emerald-600 mt-0.5"></i>
+                            <span><strong>Washable:</strong> Can be sprayed down with water, dusted vigorously, or bleached without damage.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-xmark text-rose-500 mt-0.5"></i>
+                            <span><strong>Repetitive Aesthetics:</strong> Close inspection reveals fake patterns and plastic shine.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-triangle-exclamation text-amber-500 mt-0.5"></i>
+                            <span><strong>Eco-Footprint:</strong> Made of non-biodegradable plastics that sit in landfills forever.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-slate-50 p-4 border-t border-slate-100 flex justify-between text-xs font-medium text-slate-600">
+                    <span>Est. Upfront (30-40cm): <strong class="text-slate-700">₹600 - ₹1,200</strong></span>
+                    <span>Watering: <strong class="text-emerald-700">NEVER</strong></span>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Visual Analytical Charts Panel -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Chart 1: TCO Projection -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                <div class="mb-4">
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-line text-emerald-600"></i> 5-Year Total Cost of Ownership (TCO in ₹)
+                    </h3>
+                    <p class="text-xs text-slate-500">Estimates include initial investment, plant maintenance time valuation, and eventual replacements.</p>
+                </div>
+                <div class="relative h-[300px]">
+                    <canvas id="tcoChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Chart 2: Qualitative Trade-Off Metrics -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                <div class="mb-4">
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-bar text-teal-600"></i> Performance Scoring (Score 1-10)
+                    </h3>
+                    <p class="text-xs text-slate-500">Comparing biophilic effectiveness, physical resilience, setup ease, and environmental friendliness.</p>
+                </div>
+                <div class="relative h-[300px]">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Extensive Feature-by-Feature Comparison Matrix -->
+        <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-5 border-b border-slate-100">
+                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-table text-indigo-600"></i> The Executive Office Greenery Matrix
+                </h3>
+                <p class="text-xs text-slate-500">Comprehensive functional variables comparison designed to guide low-space workspace layout planning.</p>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-slate-50 text-slate-500 uppercase tracking-wider text-[10px] font-semibold border-b border-slate-200">
+                        <tr>
+                            <th class="py-4 px-6">Criteria / Feature</th>
+                            <th class="py-4 px-6 bg-emerald-50/50 text-emerald-800">Live Plants (Low Light)</th>
+                            <th class="py-4 px-6 bg-amber-50/50 text-amber-800">Preserved ("Non-Dying")</th>
+                            <th class="py-4 px-6 bg-slate-100/50 text-slate-700">Artificial / Faux</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 text-slate-600">
+                        <!-- Origin -->
+                        <tr>
+                            <td class="py-4 px-6 font-semibold text-slate-900">True Origin</td>
+                            <td class="py-4 px-6 bg-emerald-50/30">100% Biologically Grown</td>
+                            <td class="py-4 px-6 bg-amber-50/30">100% Real (Chemically preserved)</td>
+                            <td class="py-4 px-6 bg-slate-50/30">100% Synthetic (Plastics & Fabric)</td>
+                        </tr>
+                        <!-- Touch & Feel -->
+                        <tr>
+                            <td class="py-4 px-6 font-semibold text-slate-900">Texture & Realism</td>
+                            <td class="py-4 px-6 bg-emerald-50/30">Natural, cool, flexible leaves</td>
+                            <td class="py-4 px-6 bg-amber-50/30">Soft, supple, organic, completely real feel</td>
+                            <td class="py-4 px-6 bg-slate-50/30">Plasticized or stiff fabric; can feel synthetic</td>
+                        </tr>
+                        <!-- Longevity -->
+                        <tr>
+                            <td class="py-4 px-6 font-semibold text-slate-900">Average Lifespan</td>
+                            <td class="py-4 px-6 bg-emerald-50/30">Indefinite (if cared) or 1-2 yrs (if neglected)</td>
+                            <td class="py-4 px-6 bg-amber-50/30">2 to 7+ Years (no degradation)</td>
+                            <td class="py-4 px-6 bg-slate-50/30">10+ Years (virtually permanent)</td>
+                        </tr>
+                        <!-- Weekly Care -->
+                        <tr>
+                            <td class="py-4 px-6 font-semibold text-slate-900">Weekly Care Effort</td>
+                            <td class="py-4 px-6 bg-emerald-50/30">Low (Watering, rotating, diagnosing soil)</td>
+                            <td class="py-4 px-6 bg-amber-50/30">None (Zero watering, only light dusting)</td>
+                            <td class="py-4 px-6 bg-slate-50/30">None (Zero watering, only regular dusting)</td>
+                        </tr>
+                        <!-- Sunlight Needs -->
+                        <tr>
+                            <td class="py-4 px-6 font-semibold text-slate-900">Sunlight Requirements</td>
+                            <td class="py-4 px-6 bg-emerald-50/30">Mandatory (Even low-light ZZ needs some light)</td>
+                            <td class="py-4 px-6 bg-amber-50/30">None (In fact, sun fades/bleaches them)</td>
+                            <td class="py-4 px-6 bg-slate-50/30">None (Slight risk of fading if non-UV coated)</td>
+                        </tr>
+                        <!-- Air/Health Benefits -->
+                        <tr>
+                            <td class="py-4 px-6 font-semibold text-slate-900">Health & Biophilia</td>
+                            <td class="py-4 px-6 bg-emerald-50/30 text-emerald-700 font-medium">High (Oxygenated, air purifying)</td>
+                            <td class="py-4 px-6 bg-amber-50/30 text-amber-700 font-medium">Medium-High (Psychological warmth of real wood)</td>
+                            <td class="py-4 px-6 bg-slate-50/30">Low (Purely visual, no biophilic response)</td>
+                        </tr>
+                        <!-- Dislike Trigger -->
+                        <tr>
+                            <td class="py-4 px-6 font-semibold text-slate-900">Vulnerabilities</td>
+                            <td class="py-4 px-6 bg-emerald-50/30 text-rose-600">Overwatering, root rot, bugs, dry office drafts</td>
+                            <td class="py-4 px-6 bg-amber-50/30 text-rose-600">Liquid water, direct hot sun, humidity spikes</td>
+                            <td class="py-4 px-6 bg-slate-50/30 text-rose-600">Physical impact, dust accumulation, extreme heat</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="bg-slate-900 text-slate-400 text-xs py-8 mt-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p>© 2026 Small Office Greenery Optimization Tool. Built for the Founder's Suite.</p>
+            <div class="flex gap-4">
+                <a href="#" class="hover:text-white transition">Methodology</a>
+                <span>•</span>
+                <a href="#" class="hover:text-white transition">Product Sourcing Guidelines</a>
+                <span>•</span>
+                <a href="#" class="hover:text-white transition">Nursery Partners</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Arrangement visual state toggle
+        let activeArrangement = 'current';
+
+        function toggleArrangement(type) {
+            const currentImg = document.getElementById('imgCurrent');
+            const proposedImg = document.getElementById('imgProposed');
+            const currentBtn = document.getElementById('btnArrangementCurrent');
+            const proposedBtn = document.getElementById('btnArrangementProposed');
+
+            if (type === 'current') {
+                activeArrangement = 'current';
+                currentImg.style.opacity = '1';
+                proposedImg.style.opacity = '0';
+                currentBtn.className = "px-4 py-2 text-xs font-bold rounded-lg transition-all shadow-sm bg-white text-slate-800 border border-slate-200";
+                proposedBtn.className = "px-4 py-2 text-xs font-medium rounded-lg transition-all text-slate-500 hover:text-slate-800";
+            } else {
+                activeArrangement = 'proposed';
+                currentImg.style.opacity = '0';
+                proposedImg.style.opacity = '1';
+                currentBtn.className = "px-4 py-2 text-xs font-medium rounded-lg transition-all text-slate-500 hover:text-slate-800";
+                proposedBtn.className = "px-4 py-2 text-xs font-bold rounded-lg transition-all shadow-sm bg-white text-slate-800 border border-slate-200";
+            }
+        }
+
+        // Data for spatial cabinet interactive hotspots
+        const hotspotData = {
+            ac: {
+                badge: "Hostile Climate Zone",
+                badgeClass: "bg-sky-100 text-sky-800",
+                title: "Air Conditioning Draft (Extreme)",
+                summary: "This area receives heavy cold drafts directly from air vents. High air velocity rapidly dehydrates most tropical live plant foliage and causes potting soil to dry out unevenly.",
+                live: "Weak: Monstera and other delicate tropicals drop leaves or turn yellow. Resilient plants (like Snake Plants) hold up, but their growth rate slows down.",
+                preserved: "Moderate-Good: Since preserved plants are chemically stabilized, they won't freeze; however, high velocity cold draft can slowly dry and brittle delicate leaves over time.",
+                faux: "Excellent: Artificial setups suffer zero impact from constant cold air drafts. This is the ideal zone to hide synthetic plants."
+            },
+            shadow: {
+                badge: "Dim Corner Zone",
+                badgeClass: "bg-slate-200 text-slate-800",
+                title: "Deep Shadow / Low-Light Corner",
+                summary: "Farthest from the windows. Minimal natural lux levels make photosynthesis nearly impossible for standard potted house plants.",
+                live: "Risky: Only low-light resilient varieties like Snake Plants or ZZ Plants survive here, but they will eventually leg out and lose color without supplementary light.",
+                preserved: "Best Fit: Does not require light at all. In fact, keeping them in dark spaces extends their dyed lifespan drastically by preventing UV fading.",
+                faux: "Highly Suitable: Performs excellently in any dark environment without ever degrading."
+            },
+            leftPlant: {
+                badge: "Primary Visual Spot",
+                badgeClass: "bg-emerald-100 text-emerald-800",
+                title: "Left Credenza Corner (30-40cm Spot)",
+                summary: "This is the primary focal area of your executive cabinet. It holds highest visual priority for anyone walking in or sitting in front of the desk.",
+                live: "Recommended: Replacing the large, wild Monstera with a structural Snake Plant (as shown in the proposed view) keeps it extremely neat, clean, and highly professional without sacrificing biological benefits.",
+                preserved: "Superb: A medium-sized preserved Eucalyptus bundle or high-end moss globe adds organic, luxury texture and feels highly premium to visiting clients.",
+                faux: "Moderate: Good if you want lower cost, but might look a bit artificial upon close inspection when sitting directly on the cabinet."
+            },
+            centerDesk: {
+                badge: "Accented Centerpiece",
+                badgeClass: "bg-amber-100 text-amber-800",
+                title: "Stacked Book Centerpiece Tray",
+                summary: "Sitting directly on the stacked books (Building a Legacy, etc.). Requires very low footprint and extremely clean aesthetics. No water dripping allowed.",
+                live: "High Risk: Watering a live pot sitting on top of paper books can cause water stains, rot, and permanent damage to your reading collection.",
+                preserved: "Perfect Fit: A small 15cm preserved moss bowl or succulent looks incredibly organic and is completely dry—meaning zero water damage risk to your books.",
+                faux: "Safe: Plastic succulent pots (as pictured in both current and proposed states) are highly robust, but can look a little cheap directly at eye level when clients study the books."
+            },
+            rightPlant: {
+                badge: "Accent Spot",
+                badgeClass: "bg-indigo-100 text-indigo-800",
+                title: "Right Side Wooden Accent Planter",
+                summary: "Pictured on the right of the books as a dense, leaf-filled wood-bark planter. A low-to-medium accent to break up the flat white background surface behind.",
+                live: "Excellent: A ZZ Plant (Zamioculcas zamiifolia) fits perfectly here. Its dark glossy leaves catch light beautifully and require water only once a month.",
+                preserved: "Wonderful: A lush cluster of preserved green ferns or baby eucalyptus mimics the organic flow of the office perfectly.",
+                faux: "Good: Simple artificial leafy shrubs are quite functional here (as shown in image_a11343.jpg), but are prone to gathering fine dust quickly on their fabric surface."
+            }
+        };
+
+        // Function to update spatial display based on selected hotspot click
+        function selectHotspot(key) {
+            const data = hotspotData[key];
+            if (!data) return;
+
+            document.getElementById('hotspotBadge').className = `inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${data.badgeClass}`;
+            document.getElementById('hotspotBadge').innerText = data.badge;
+            document.getElementById('hotspotTitle').innerText = data.title;
+            document.getElementById('hotspotSummary').innerHTML = data.summary;
+            document.getElementById('hotspotLiveText').innerHTML = data.live;
+            document.getElementById('hotspotPreservedText').innerHTML = data.preserved;
+            document.getElementById('hotspotFauxText').innerHTML = data.faux;
+
+            // Highlight animation on panel update
+            const panel = document.getElementById('hotspotDisplay');
+            panel.classList.add('ring-2', 'ring-emerald-500/50');
+            setTimeout(() => {
+                panel.classList.remove('ring-2', 'ring-emerald-500/50');
+            }, 600);
+        }
+
+        // Calculations for interactive match-making algorithm
+        function calculateScores() {
+            const light = parseInt(document.getElementById('lightSlider').value);
+            const care = parseInt(document.getElementById('careSlider').value);
+            const budget = parseInt(document.getElementById('budgetSlider').value);
+            const biophilia = parseInt(document.getElementById('biophiliaSlider').value);
+
+            // Dynamically alter textual display label
+            const lightTexts = ["Low Ambient / Dark", "Partial / Filtered Shade", "Bright Natural Windows"];
+            const careTexts = ["0 mins/week (Zero Care)", "5-10 mins/Month (Ultra-Low)", "15+ mins/Week (Active)"];
+            const budgetTexts = ["Economy (Under ₹800)", "Mid-Range (₹800 - ₹1,800)", "Premium Luxury (₹1,800+)"];
+            const biophiliaTexts = ["Don't Care", "Nice-to-have", "Highest Priority (Real nature only)"];
+
+            document.getElementById('lightValText').innerText = lightTexts[light - 1];
+            document.getElementById('careValText').innerText = careTexts[care - 1];
+            document.getElementById('budgetValText').innerText = budgetTexts[budget - 1];
+            document.getElementById('biophiliaValText').innerText = biophiliaTexts[biophilia - 1];
+
+            // Base scores out of 100
+            let scoreLive = 40;
+            let scorePreserved = 40;
+            let scoreArtificial = 40;
+
+            // 1. Light Effect
+            if (light === 1) { // Low Ambient
+                scoreLive -= 15;
+                scorePreserved += 20;
+                scoreArtificial += 20;
+            } else if (light === 2) { // Partial
+                scoreLive += 15;
+                scorePreserved += 10;
+                scoreArtificial += 10;
+            } else { // Bright
+                scoreLive += 30;
+                scorePreserved -= 15; // Sunlight damages preserved dyes
+                scoreArtificial += 5;
+            }
+
+            // 2. Care Effort Effect
+            if (care === 1) { // Zero care
+                scoreLive -= 35;
+                scorePreserved += 30;
+                scoreArtificial += 35;
+            } else if (care === 2) { // Low care
+                scoreLive += 20; // Snake plants love low care
+                scorePreserved += 15;
+                scoreArtificial += 10;
+            } else { // Active care
+                scoreLive += 30;
+                scorePreserved += 5;
+                scoreArtificial -= 10;
+            }
+
+            // 3. Budget Effect
+            if (budget === 1) { // Low budget
+                scoreLive += 25; // Standard live plants are cheap
+                scorePreserved -= 35; // Too expensive
+                scoreArtificial += 20;
+            } else if (budget === 2) { // Mid budget
+                scoreLive += 15;
+                scorePreserved += 5;
+                scoreArtificial += 20;
+            } else { // High budget
+                scoreLive += 5;
+                scorePreserved += 35; // Premium preserved becomes a prime option
+                scoreArtificial += 10;
+            }
+
+            // 4. Biophilia / Natural Authenticity Priority
+            if (biophilia === 1) { // low importance
+                scoreLive += 5;
+                scorePreserved += 10;
+                scoreArtificial += 30;
+            } else if (biophilia === 2) { // moderate
+                scoreLive += 20;
+                scorePreserved += 25;
+                scoreArtificial += 5;
+            } else { // high importance
+                scoreLive += 35;
+                scorePreserved += 30;
+                scoreArtificial -= 35; // Hates fake plants
+            }
+
+            // Normalize scores to be between 10% and 98%
+            const bound = (val) => Math.max(10, Math.min(98, val));
+            scoreLive = bound(scoreLive);
+            scorePreserved = bound(scorePreserved);
+            scoreArtificial = bound(scoreArtificial);
+
+            // Update DOM progress bars
+            document.getElementById('scoreLiveText').innerText = `${Math.round(scoreLive)}%`;
+            document.getElementById('scoreLiveBar').style.width = `${scoreLive}%`;
+            
+            document.getElementById('scorePreservedText').innerText = `${Math.round(scorePreserved)}%`;
+            document.getElementById('scorePreservedBar').style.width = `${scorePreserved}%`;
+            
+            document.getElementById('scoreArtificialText').innerText = `${Math.round(scoreArtificial)}%`;
+            document.getElementById('scoreArtificialBar').style.width = `${scoreArtificial}%`;
+
+            // Calculate Best Match Verdict
+            let bestTitle = "";
+            let bestDesc = "";
+
+            if (scoreLive >= scorePreserved && scoreLive >= scoreArtificial) {
+                bestTitle = "Live Low-Light Plants";
+                bestDesc = "Since you have decent light and can allocate minor care, Live Snake/ZZ plants provide incredible biophilic benefits, improve oxygen flow, and offer the cheapest upfront investment.";
+            } else if (scorePreserved >= scoreLive && scorePreserved >= scoreArtificial) {
+                bestTitle = "Preserved (Non-Dying) Plants";
+                bestDesc = "Your combination of needing premium natural styling without any daily maintenance makes preserved greenery the ultimate choice. Perfect for keeping the founder's desk elegant and dry.";
+            } else {
+                bestTitle = "Artificial / Synthetic Plants";
+                bestDesc = "Extreme durability and zero maintenance needs are your top priorities. Modern high-quality fake plants are waterproof, easy to wash, and won't ever fade under the AC vents.";
+            }
+
+            document.getElementById('bestMatchTitle').innerText = bestTitle;
+            document.getElementById('bestMatchDesc').innerText = bestDesc;
+        }
+
+        // Setup event listeners for calculator sliders
+        document.getElementById('lightSlider').addEventListener('input', calculateScores);
+        document.getElementById('careSlider').addEventListener('input', calculateScores);
+        document.getElementById('budgetSlider').addEventListener('input', calculateScores);
+        document.getElementById('biophiliaSlider').addEventListener('input', calculateScores);
+
+        // Chart setup function
+        window.onload = function() {
+            
+            // 1. Chart.js Cost Projection (TCO over 5 Years in INR)
+            const ctxCost = document.getElementById('tcoChart').getContext('2d');
+            new Chart(ctxCost, {
+                type: 'line',
+                data: {
+                    labels: ['Year 1 (Initial Setup)', 'Year 2', 'Year 3', 'Year 4', 'Year 5'],
+                    datasets: [
+                        {
+                            label: 'Live Plants (Replacement cost if neglect happens)',
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            data: [500, 1100, 1700, 2300, 2900], // cumulative cost of replacements & soil
+                            borderWidth: 3,
+                            tension: 0.1,
+                            fill: true
+                        },
+                        {
+                            label: 'Preserved Plants (Zero upkeep, replace around Yr 4)',
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.05)',
+                            data: [2500, 2500, 2500, 2500, 5000], // initial high cost, stays flat, replacement year 5
+                            borderWidth: 3,
+                            tension: 0.1
+                        },
+                        {
+                            label: 'Artificial / Faux (Flat permanent cost)',
+                            borderColor: '#64748b',
+                            backgroundColor: 'rgba(100, 116, 139, 0.05)',
+                            data: [800, 800, 800, 800, 800], // flat cost
+                            borderWidth: 3,
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: { size: 10 }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Cumulative Investment (INR ₹)',
+                                font: { size: 11, weight: 'bold' }
+                            },
+                            ticks: {
+                                callback: function(value) { return '₹' + value; }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 2. Chart.js Attributes Performance Scores
+            const ctxRadar = document.getElementById('radarChart').getContext('2d');
+            new Chart(ctxRadar, {
+                type: 'bar',
+                data: {
+                    labels: ['Biophilic Benefit', 'Resilience to AC/Sun', 'Low Maintenance', 'Cost Economy', 'Aesthetic Authenticity'],
+                    datasets: [
+                        {
+                            label: 'Live',
+                            backgroundColor: 'rgba(16, 185, 129, 0.85)',
+                            data: [10, 4, 3, 9, 10]
+                        },
+                        {
+                            label: 'Preserved',
+                            backgroundColor: 'rgba(245, 158, 11, 0.85)',
+                            data: [8, 6, 10, 4, 9]
+                        },
+                        {
+                            label: 'Artificial',
+                            backgroundColor: 'rgba(100, 116, 139, 0.85)',
+                            data: [1, 10, 10, 7, 4]
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: { size: 10 }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            max: 10,
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Score out of 10',
+                                font: { size: 11, weight: 'bold' }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Run initial match calculations on load
+            calculateScores();
+        }
+    </script>
+</body>
+</html>
